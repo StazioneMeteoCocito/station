@@ -8,6 +8,7 @@ ffmpeg -y -i en.wav -i it.wav -i radio.wav \
 -map '[out]' bulletin.mp3
 rm *.wav
 mv bulletin.mp3 ../storedData/
+cp radio ../storedData/
 (espeak -s 120 -f bullEN &&
 espeak -v it -s 120 -f bullIT &&
 cat radio | minimodem --tx rtty) &
