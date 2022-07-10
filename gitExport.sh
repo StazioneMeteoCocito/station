@@ -1,3 +1,4 @@
+echo " [gitExport] Starting github sync" | xargs -d"\n" -I {} date +"%Y-%m-%d %H:%M:%S {}" >> /home/pi/station.log
 dir=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
 cd $dir
 bash infofile.sh | tee "storedData/report.txt"
