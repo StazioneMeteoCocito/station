@@ -5,9 +5,25 @@ import time
 import random
 from sense_hat import SenseHat
 import datetime
+import signal
 sense = SenseHat()
 s = Station()
 ser = serial.Serial('/dev/ttyACM0', 9600, timeout=10)
+running = True
+
+def log(text):
+    f = open("/home/pi/station.log", "a+")
+    f.write(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+" [pythonStation] "+text)
+    f.close()
+    
+
+def stop():
+    global running
+    log("Gracefully handling death")
+    running = True
+
+signal.signal(signal.SIGINT, stop)
+signal.signal(signal.SIGTERM, stop)
 
 
 def get_sensors_serial(ser):
@@ -28,7 +44,7 @@ def get_sensors_serial(ser):
 
 timeMeasure = 5*60
 
-while True:
+while running:
     try:
         print("New measurement")
         dts = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -52,8 +68,15 @@ while True:
                 pmt=arduino["pm10"], pmtw=arduino["pm2.5"], s=arduino["smoke"]))
         else:
             print("Arduino not present")
-        time.sleep(timeMeasure)
+        log("Measurement taken")
+        i = 0
+        while i<timeMeasure and running:
+            time.sleep(1)
+            i += 1
     except Exception as e:
         print("EXCEPTION:")
         print(e)
-        time.sleep(10)
+        i = 0
+        while i<timeMeasure and running:
+            time.sleep(1)
+            i += 1
