@@ -12,7 +12,7 @@ running = False
 
 def log(text):
     f = open("/home/pi/station.log", "a+")
-    f.write(datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+"  [pythonStation] "+text+"\n")
+    f.write(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"  [pythonStation] "+text+"\n")
     f.close()
     
 
